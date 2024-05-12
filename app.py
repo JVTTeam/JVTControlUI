@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from PIL import Image
 
+import stimulation_controller
+
 
 class App(ctk.CTk):
     ZONE_IDS = map(chr, range(ord("I"), ord("W") + 1))
@@ -22,8 +24,13 @@ class App(ctk.CTk):
         self.draw_hand_layout()
         self.draw_config_sidebar()
 
+        self.stimulation_controller = stimulation_controller.StimulationController()
+
     def on_finger_zone_click(self, zone):
-        print("button clicked", zone)
+        self.stimulation_controller.update_stimulation(zone, self.strength, self.frequency, self.pulse_width)
+
+    def on_clear_button_click(self):
+        self.stimulation_controller.clear_stimulation()
 
     def change_strength_value(self, value):
         self.strength = int(value)
@@ -209,6 +216,7 @@ class App(ctk.CTk):
             corner_radius=10,
             fg_color="indian red",
             hover_color="firebrick",
+            command=self.on_clear_button_click,
         )
         self.clear_button.place(x=30, y=670, anchor="sw")
 
